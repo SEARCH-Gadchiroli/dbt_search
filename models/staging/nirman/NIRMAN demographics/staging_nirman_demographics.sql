@@ -85,7 +85,11 @@ cleaned_data as (
         trim(workshop_type)          as workshop_type,
         trim(workshop_month_year)    as workshop_month_year,
         workshops_attended,
-        trim(educational_stream)     as educational_stream_raw,
+        case
+            when trim(educational_stream) = 'Commerace' then 'Commerce'
+            when trim(educational_stream) = 'Medical' then 'Medical / Public Health'
+            else trim(educational_stream)
+        end                          as educational_stream_raw,
         trim(level_of_education)     as level_of_education,
         trim(current_status_of_work) as current_status_of_work_raw,
         person_years_social_action,
@@ -153,8 +157,7 @@ cleaned_data as (
                  or lower(trim(current_status_of_work)) ilike '%different trajectory%'
                 then 'Graduate'
             when (current_status_of_work is null
-                  or trim(current_status_of_work) = ''
-                  or lower(trim(current_status_of_work)) ilike '%not sure%')
+                  or trim(current_status_of_work) = '')
                  and (
                      upper(trim(level_of_education)) = 'M'
                      or upper(trim(level_of_education)) = 'P'
