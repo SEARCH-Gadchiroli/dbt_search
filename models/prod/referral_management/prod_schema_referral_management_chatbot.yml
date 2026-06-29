@@ -1,0 +1,60 @@
+version: 2
+
+models:
+  - name: prod_referral_management_chatbot
+    description: >
+      Production table of patient referrals raised by SEARCH field staff
+      (Supervisors, ASHAs, MMU, MHD counsellors) via the referral chatbot.
+      One row per referral. Only fully complete records are included —
+      every column is guaranteed non-null.
+    columns:
+      - name: reference_id
+        description: Unique referral code issued by the chatbot. Primary key.
+        tests:
+          - unique
+          - not_null
+
+      - name: referral_date
+        description: Date the referral was raised.
+        tests:
+          - not_null
+
+      - name: phc
+        description: PHC / village area the field staff member was operating in.
+        tests:
+          - not_null
+
+      - name: referrer_department
+        description: Team of the field staff member who raised the referral (e.g. MMU, MHD).
+        tests:
+          - not_null
+
+      - name: referrer_name
+        description: Name of the field staff member who raised the referral.
+        tests:
+          - not_null
+
+      - name: patient_name
+        description: Name of the referred patient.
+        tests:
+          - not_null
+
+      - name: patient_age
+        description: Patient's age in years (0–120).
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 120
+
+      - name: patient_gender
+        description: Patient's gender — Male, Female, or Other.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Male', 'Female', 'Other']
+
+      - name: referred_to_department
+        description: Hospital OPD department the patient was referred to.
+        tests:
+          - not_null
