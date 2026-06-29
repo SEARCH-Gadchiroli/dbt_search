@@ -9,7 +9,10 @@ with raw_questionnaire as (
         participant_name,
         workshop_name,
         workshop_phase,
-        batch,
+        case
+            when batch::numeric < 10 then '0' || batch::numeric::text
+            else batch::numeric::text
+        end as batch,
 
         -- Career columns (8 total: carrer_1 to carrer_8)
         -- Note: source has 'carrer' typo — preserved for compatibility
